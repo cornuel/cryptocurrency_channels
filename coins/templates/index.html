@@ -1,0 +1,94 @@
+{% extends 'base.html' %} 
+{% block title %}Index{% endblock title %} 
+{% block content %}
+
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+<link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+{% verbatim  %}
+
+<div id="app">
+<section class="py-1 bg-red-500">
+<div class="w-full xl:w-8/12 mb-0 xl:mb-0 px-4 mx-auto mt-24 rounded-lg">
+  <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
+      <table class="table-hover items-center bg-transparent w-full border-collapse">
+        <thead>
+          <tr>
+            <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-2xl uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Rank
+                        </th>
+          <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-2xl uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Icon
+                        </th>
+           <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-2xl uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Name
+                        </th>
+          <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-2xl uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Price
+                        </th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <tr v-for="coin in coins" :key="coin.id" class="hover:bg-red-50 rounded-lg">
+            <th class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-2xl whitespace-nowrap p-4 text-left text-blueGray-700 ">
+                {{ coin.rank }}
+            </th>
+            <td class="px-6 py-2 flex flex-row items-center">
+                <img
+                  class="h-12 w-12 rounded-full object-cover"
+                  :src="coin.image"
+                  alt=""
+                />
+              </td>
+            <td class="border-t-0 px-6 align-left border-l-0 border-r-0 text-2xl whitespace-nowrap p-4">
+                {{ coin.name }} 
+                <small class="px-5 text-red-500">{{ coin.symbol }}</small>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-2xl whitespace-nowrap p-4">
+              <i :class="{'fas fa-arrow-up text-emerald-500 mr-4': coin.state === 'raise', 
+                          'fas fa-arrow-down text-red-500 mr-4': coin.state === 'fall',
+                          'fas fa-arrow-right text-gray 500 mr-4': coin.state ==='same'}"></i>
+              <span :class="{'text-emerald-500': coin.state === 'raise', 'text-red-500': coin.state === 'fall'}">
+              {{ coin.price }}
+              </span>
+            </td>
+        </tr>
+    </tbody>
+    
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+{% endverbatim  %}
+</section>
+
+<script>
+  const { createApp } = Vue;
+
+  const CoinsApp = {
+    data(){
+      return {
+        coin: "Just a coin",
+        coins: null
+      }
+    },
+    created(){
+      const wsStart = 'ws://'
+      let endpoint = wsStart + window.location.host + '/ws/coins/'
+      const socket = new WebSocket(endpoint)
+
+      let _this = this;
+
+      socket.onmessage = function(event){
+        _this.coins = JSON.parse(event.data);
+        console.log(_this.coins)
+      }
+    }
+  }
+
+createApp(CoinsApp).mount('#app')
+
+</script>
+{% endblock content %}
