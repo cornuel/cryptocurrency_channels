@@ -9,7 +9,7 @@ A simple web app that displays the prices of top 100 cryptocurrencies and refres
 <ul>
 <li>Python Django Framework</li>
 <li>Channels</li>
-<li>Redis</li>
+<li>Celery + Redis</li>
 <li>VueJs</li>
 <li>Tailwind</li>
 </ul>
